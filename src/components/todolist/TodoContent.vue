@@ -239,7 +239,7 @@ export default {
     font-size: 1.2rem;
     text-align: center;
     color: rgba(83, 104, 110, 0.5);
-
+    margin-top: 10px;
 }
 .divLine section.sectionCompleted ul li i {
     margin-right: 140px;
