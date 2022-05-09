@@ -211,10 +211,14 @@ export default {
     color: rgba(44, 116, 138, 0.8)
 }
 /* ------------------------- line ------------------------- */
-
+.divLine .listBox {
+    cursor: pointer;
+}
+.divLine .listBox:hover {
+        background: rgba(83, 104, 110, 0.5);
+    }
 .divLine section {
     pointer-events: none;
-    cursor: pointer;
     display: flex;
     /* justify-content: space-between; */
     align-items: flex-start;
@@ -223,9 +227,6 @@ export default {
     width: 100%;
     margin: auto;
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-}
-.divLine section:hover {
-    background: rgba(83, 104, 110, 0.5);
 }
 
 .divLine section.sectionCompleted {
@@ -281,7 +282,7 @@ section ul {
     /* margin: 10px auto; */
     /* padding: 5px 0px; */
     font-size: 0.9rem;
-    color: rgba(0, 0, 0, 0.8);
+    color: rgba(0, 0, 0, 0.7);
     margin-bottom: 10px;
 }
 
