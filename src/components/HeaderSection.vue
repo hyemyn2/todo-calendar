@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     checkRouter () {
-      console.log(this.$router.currentRoute.path)
+      // console.log(this.$router.currentRoute.path)
     },
     fetchToday () {
       const fetchedToday = new Date()

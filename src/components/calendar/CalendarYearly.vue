@@ -8,7 +8,7 @@
               <p class="monthNumber">{{ key+1 }}</p>
           </div>
         <calendar-small>
-            <li slot="slotDayNumber" 
+            <li class="dateLi" slot="slotDayNumber" 
             v-for="(day, index) in month" 
             v-bind:id="day" 
             v-bind:key="index"
@@ -65,7 +65,7 @@ export default {
     },
     created () {
         this.loadedYear = this.$store.state.fetchedDate.getFullYear()
-        console.log(this.loadedYear)
+        // console.log(this.loadedYear)
     //   this.$store.commit('changeFetchedDate', this.$store.state.fetchedDate)
     }
 }
@@ -81,6 +81,9 @@ export default {
         width: 70%;
         margin: 40px auto;
     }
+    .dateLi:hover .yearlyDatesNumber{
+        color: rgba(0, 0, 0, 0.9);
+    }
     .yearlyComponent .calendarBox .monthTitle {
         display: flex;
         /* justify-content: center; */
@@ -90,7 +93,7 @@ export default {
         padding-bottom: 2px;
         margin-bottom: 12px;
         /* border-bottom: 1px solid rgba(0, 0, 0, 0.12); */
-        background: rgba(0, 0, 0, 0.03);
+        background: rgba(0, 0, 0, 0.02);
     }
     .yearlyComponent .calendarBox .monthTitle .monthNumber {
         margin: 0 10px 0 0;
@@ -111,9 +114,10 @@ export default {
     }
     .yearlyComponent .calendarBox li .box {
     border-radius: 100%;
-    width: 22px;
-    height: 22px;
+    width: 23px;
+    height: 23px;
     margin: auto;
+    text-align: center;
     }
     .yearlyComponent .calendarBox li.activeFetched .box {
     background: rgba(139, 192, 235, 0.5);
