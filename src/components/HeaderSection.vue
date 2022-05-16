@@ -10,10 +10,10 @@
         <p class="hdTitle" v-on:click="this.doReload">Calendar</p>
     </div>
     <ul class="navi">
-      <router-link :to="`/`" class="routerLink">
+      <router-link :to="`/project/todo-calendar/`" class="routerLink">
         <li>Calendar</li>
       </router-link>
-      <router-link :to="`/todo`" class="routerLink">
+      <router-link :to="`/project/todo-calendar/todo`" class="routerLink">
         <li>Todo List</li>
       </router-link>
       <!-- <li>Todo List</li> -->
@@ -30,7 +30,7 @@ export default {
   },
   methods: {
     checkRouter () {
-      // console.log(this.$router.currentRoute.path)
+      console.log(this.$router.currentRoute.path)
     },
     fetchToday () {
       const fetchedToday = new Date()
@@ -41,7 +41,7 @@ export default {
       this.$store.state.booleanBurger = !this.$store.state.booleanBurger
     },
     doReload () {
-      location.pathname = '/'
+      location.pathname = '/project/todo-calendar'
     }
   },
 created () {

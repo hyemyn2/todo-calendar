@@ -125,6 +125,8 @@ export default {
         state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length/8))].map(i => copyModalTodo.splice(i*8, 8))
     },
     setModalData (state, payload) {
+        console.log(payload.target)
+        console.log(payload.target.id)
         state.showModal = true
         const clickedDate = payload.target.id
         state.modalDate = clickedDate

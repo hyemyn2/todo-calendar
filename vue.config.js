@@ -4,5 +4,6 @@ module.exports = defineConfig({
 })
 
 module.exports = {
-  lintOnSave: false
+  lintOnSave: false,
+  publicPath: '/project/todo-calendar/'
 }

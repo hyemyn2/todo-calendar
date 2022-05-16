@@ -86,8 +86,6 @@ export default {
     height: 130px;
     border-right: 1px solid rgba(0, 0, 0, 0.15);
     border-bottom: 1px solid rgba(0, 0, 0, 0.15);
-    max-width: 100%;
-    overflow: auto;
   }
   .calendarBlock:nth-of-type(7n) {
     border-right: none;
@@ -141,14 +139,9 @@ export default {
     background: rgba(139, 192, 235, 0.65);
     color: rgba(0, 0, 0, 1);
     border-radius: 5px;
-    overflow-x: auto;
-    max-width: 100%;
     overflow: hidden;
   }
   section ul li p {
-    max-width: 100%;
-
-    overflow-x: auto;
     margin: 0;
     width: auto;
     overflow: hidden;
@@ -206,7 +199,6 @@ export default {
   }
   .calendarList.activeDaily .calendarBlock h2 {
     font-size: 1.2rem;
-    padding-left: 10px;
     color: rgba(0, 0, 0, 0.85);
     margin: 20px 0 20px 10px ;
     text-align: left;
@@ -215,8 +207,7 @@ export default {
   }
 
   .activeFetched {
-    /* background: rgb(0, 0, 0, 0.1); */
-    box-shadow: 0px 0px 8px rgb(0, 0, 0, 0.1) inset;
+    background: rgb(0, 0, 0, 0.1);
   }
 
   .activeFetched h2 {

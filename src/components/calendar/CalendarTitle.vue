@@ -118,7 +118,6 @@ export default {
 
 <style scoped>
   .calendarHeader {
-
     background: rgba(255, 255, 255, 1);
     /* background: rgba(218, 220, 224, 1); */
 

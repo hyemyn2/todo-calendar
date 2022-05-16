@@ -171,6 +171,7 @@ export default {
         },
         checkAllCompleted (date) {
             const arr = this.todoItems(date).map(i => i.completed)
+            console.log(arr)
             if ( arr.includes(false)) {
                 // console.log('have false')
                 return false
@@ -214,7 +215,7 @@ export default {
     cursor: pointer;
 }
 .divLine .listBox:hover {
-        background: rgba(83, 104, 110, 0.1);
+        background: rgba(83, 104, 110, 0.5);
     }
 .divLine section {
     pointer-events: none;

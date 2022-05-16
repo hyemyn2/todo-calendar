@@ -24,11 +24,11 @@
                 v-bind:key="index"
                 v-on:click="fetchMonthlyCalendar(day)">
                 <calendar-block id="show-modal">
-                  <template v-if="checkFetched(day)">
-                    <span class="dateSpan activeFetched" slot="dayNumber">{{ day[2] }}</span>
+                  <template v-if="day[0] === literalTodayDate[0] && day[1] === literalTodayDate[1] && day[2] === literalTodayDate[2]">
+                    <span slot="dayNumber" class="activeToday">{{ day[2] }}</span>
                   </template>
                   <template v-else>
-                    <span class="dateSpan" slot="dayNumber">{{ day[2] }}</span>
+                    <span slot="dayNumber">{{ day[2] }}</span>
                   </template>
                 </calendar-block>
               </li>
@@ -65,7 +65,7 @@ export default {
     CalendarBlock
   },
   computed: {
-    ...mapState(['literalMonths', 'literalTodayDate', 'todoData', 'fetchedDate']),
+    ...mapState(['literalMonths', 'literalTodayDate', 'todoData']),
     ...mapGetters(['setSideYear', 'setSideMonth', 'setDay', 'todoData']),
   },
   methods: {
@@ -95,17 +95,15 @@ export default {
       this.$store.commit('changeSideCalendar', fetchSideNext)
     },
     fetchMonthlyCalendar (day) {
+      console.log(day)
       this.$store.commit('changeFetchedDate', new Date(day[0], day[1]-1, day[2]))
     },
     sideCheckTodo (todoItem, key) {
-      // console.log(todoItem)
-      // console.log(key)
+      console.log(todoItem)
+      console.log(key)
 
       this.todoData[`${this.literalTodayDate.join(',')}`][key].completed = !this.todoData[`${this.literalTodayDate.join(',')}`][key].completed
     },
-    checkFetched (day) {
-      return day[0] === this.fetchedDate.getFullYear() && day[1] === (this.fetchedDate.getMonth()+1) && day[2] === this.fetchedDate.getDate()
-    }
   },
   created () {
     this.$store.state.sideFetchedDate = this.$store.state.todayDate
@@ -145,22 +143,6 @@ export default {
     padding: 20px 0;
 
     }
-    .toolBoxContent .block .dateSpan {
-      display: inline-block;
-      border-radius: 100%;
-    }
-    .toolBoxContent .block:hover .dateSpan {
-      color: rgba(0, 0, 0, 0.9)
-    }
-    /* .toolBoxContent .block:hover .dateSpan {
-      background: rgba(0, 0, 0, 0.12);
-    } */
-
-    .toolBoxContent .block .dateSpan.activeFetched {
-      color: rgba(0, 0, 0, 0.9)
-
-    }
-
     .others .toolBox .toolBoxTitle {
       margin: 0 20px 20px 20px;
       display: flex;
@@ -206,9 +188,9 @@ export default {
         display: flex;
         justify-content: space-around;
         align-items: center;
-        border-radius: 15px;
+        border-radius: 5px;
         box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
-        width: 150px;
+        width: 130px;
         font-size: 0.8rem;
         margin: auto;
         padding: 12px 30px;
