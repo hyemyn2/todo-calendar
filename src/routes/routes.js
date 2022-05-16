@@ -5,7 +5,7 @@ import CalendarContent from '../components/calendar/CalendarContent.vue'
 
 Vue.use(VueRouter)
 const route = [
-    {path: '/project/todo-calendar/', component: CalendarContent},
+    {path: '/project/todo-calendar', component: CalendarContent},
     {path: '/project/todo-calendar/todo', component: TodoContent},
 ]
 

@@ -5,5 +5,7 @@ module.exports = defineConfig({
 
 module.exports = {
   lintOnSave: false,
-  publicPath: '/project/todo-calendar/'
+  publicPath: process.env.NODE_ENV === 'production'
+  ? '/project/todo-calendar/'
+  : '/project/todo-calendar/'
 }

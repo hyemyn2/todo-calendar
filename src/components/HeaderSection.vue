@@ -41,7 +41,7 @@ export default {
       this.$store.state.booleanBurger = !this.$store.state.booleanBurger
     },
     doReload () {
-      location.pathname = '/project/todo-calendar'
+      location.pathname = '/project/todo-calendar/'
     }
   },
 created () {

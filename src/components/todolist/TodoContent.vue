@@ -171,7 +171,6 @@ export default {
         },
         checkAllCompleted (date) {
             const arr = this.todoItems(date).map(i => i.completed)
-            console.log(arr)
             if ( arr.includes(false)) {
                 // console.log('have false')
                 return false
