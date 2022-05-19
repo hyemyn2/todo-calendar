@@ -9,19 +9,13 @@
           <div class="modal-body">
             <slot name="body"></slot>
           </div>
-          <!-- <div class="modal-footer">
-            <slot name="footer"></slot>
-          </div> -->
         </div>
       </div>
     </div>
   </transition>
 </template>
 
-<script>
-export default {
-}
-</script>
+<script></script>
 
 <style scoped>
 .modal-mask {
@@ -46,8 +40,6 @@ export default {
   justify-content: space-between;
   width: 400px;
   height: 570px;
-  /* min-height: 500px;
-  height: auto; */
   margin: 0px auto;
   background-color: #fff;
   border-radius: 2px;
@@ -89,7 +81,7 @@ export default {
   float: right;
   margin: 10px 15px;
   background: rgb(6, 126, 238);
-  
+
   color: white;
   padding: 7px 20px;
   border-radius: 5px;
@@ -99,15 +91,6 @@ export default {
 .modal-default-button:hover {
   background: rgb(26, 139, 245);
 }
-/*
- * The following styles are auto-applied to elements with
- * transition="modal" when their visibility is toggled
- * by Vue.js.
- *
- * You can easily play with the modal transition by editing
- * these styles.
- */
-
 .modal-enter {
   opacity: 0;
 }

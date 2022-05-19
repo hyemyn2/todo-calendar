@@ -1,37 +1,62 @@
 <template>
-  <div id="app" v-on:click="this.togglesOff">
-    <header-section class="headerSection"></header-section>
-    <side-section class="sideSection" v-bind:class="{active:this.$store.state.booleanBurger}"></side-section>
-    <main-section class="mainSection" v-bind:class="{active:this.$store.state.booleanBurger}"></main-section>
+  <div id="app" @click="togglesOff">
+    <header-section
+      class="headerSection"
+    >
+    </header-section>
+    <side-section
+      class="sideSection"
+      :class="{active:booleanBurger}"
+    >
+    </side-section>
+    <main-section
+      class="mainSection"
+      :class="{active:booleanBurger}"
+    >
+    </main-section>
   </div>
 </template>
 
 <script>
-import HeaderSection from './components/HeaderSection.vue'
-import SideSection from './components/SideSection.vue'
-import MainSection from './components/MainSection.vue'
+import HeaderSection from './components/view/HeaderSection.vue'
+import SideSection from './components/view/SideSection.vue'
+import MainSection from './components/view/MainSection.vue'
+import { mapState, mapMutations } from 'vuex'
 export default {
   name: 'App',
   components: {
     HeaderSection,
     MainSection,
-    SideSection,
+    SideSection
+  },
+  computed: {
+    ...mapState([
+      'allToggles',
+      'todayDate',
+      'literalTodayDate',
+      'booleanBurger',
+      'todayDate'
+    ])
   },
   methods: {
+    ...mapMutations([
+      'changeFetchedDate'
+    ]),
     fetchToday () {
       const fetchedToday = new Date()
       this.$store.state.todayDate = fetchedToday
-      this.$store.state.literalTodayDate = [fetchedToday.getFullYear(), fetchedToday.getMonth()+1, fetchedToday.getDate()]
+      this.$store.state.literalTodayDate = [fetchedToday.getFullYear(), fetchedToday.getMonth() + 1, fetchedToday.getDate()]
+      this.changeFetchedDate(this.$store.state.todayDate)
     },
     togglesOff (event) {
-      if (event.target.className !== this.$store.state.allToggles.toggleCalendarType.excludeOffEvent) {
-        this.$store.state.allToggles.toggleCalendarType.booleanValue = false
+      if (event.target.className !== this.allToggles.toggleCalendarType.excludeOffEvent) {
+        this.allToggles.toggleCalendarType.booleanValue = false
       }
     }
   },
   created () {
     this.fetchToday()
-  },
+  }
 }
 </script>
 

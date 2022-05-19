@@ -1,51 +1,87 @@
 <template>
   <div class="boxSideBar">
-    <div class="others" v-bind:class="{active:this.$store.state.booleanBurger}">
+    <div
+      class="others"
+      :class="{ active:booleanBurger }"
+    >
       <section class="toolBox">
         <div class="toolBoxTitle">
           <h2>
-            {{ this.literalMonths[Number(this.setSideMonth)-1] }}
-            {{ this.setSideYear }}
+            {{ setLiteralMonths }}
+            {{ setSideYear }}
           </h2>
           <div class="arrows">
-              <span class="arrowPrev" v-on:click="this.showPrev">
+              <span
+                class="arrowPrev"
+                @click="showPrev"
+              >
                 <i class="fa-solid fa-angle-left"></i>
               </span>
-              <span class="arrowNext" v-on:click="this.showNext">
+              <span
+                class="arrowNext"
+                @click="showNext"
+              >
                 <i class="fa-solid fa-angle-right"></i>
               </span>
           </div>
         </div>
         <div class="toolBoxContent">
           <calendar-small>
-              <li slot="slotDayNumber" class="block"
-                v-for="(day, index) in this.$store.state.sideLoadedDates" 
-                v-bind:id="day" 
-                v-bind:key="index"
-                v-on:click="fetchMonthlyCalendar(day)">
-                <calendar-block id="show-modal">
-                  <template v-if="day[0] === literalTodayDate[0] && day[1] === literalTodayDate[1] && day[2] === literalTodayDate[2]">
-                    <span slot="dayNumber" class="activeToday">{{ day[2] }}</span>
+              <li
+                slot="slotDayNumber"
+                class="block"
+                v-for="(day, index) in sideLoadedDates"
+                :id="day"
+                :key="index"
+                @click="fetchMonthlyCalendar(day)"
+              >
+                <calendar-block>
+                  <template v-if="checkFetched(day)">
+                    <span
+                      class="dateSpan activeFetched"
+                      slot="dayNumber"
+                    >
+                      {{ day[2] }}
+                    </span>
                   </template>
                   <template v-else>
-                    <span slot="dayNumber">{{ day[2] }}</span>
+                    <span
+                      class="dateSpan"
+                      slot="dayNumber"
+                    >
+                      {{ day[2] }}
+                    </span>
                   </template>
                 </calendar-block>
               </li>
           </calendar-small>
         </div>
       </section>
-      <template v-if="todoData[`${literalTodayDate.join(',')}`] !== undefined">
+      <template
+        v-if="haveTodayTodo"
+      >
         <section class="toolBox">
           <div class="toolBoxTitle">
-            <h2>Today's todolist</h2>
+            <h2>
+              Today's todolist
+            </h2>
           </div>
           <div class="toolBoxContent">
             <ul class="todayList">
-              <li v-on:click="sideCheckTodo(todoItem, key)" v-bind:class="{checked:todoItem.completed}" class="todoItem" v-for="(todoItem, key) in todoData[`${literalTodayDate.join(',')}`]" v-bind:key="key">
-                  <p class="todoText">{{ todoItem.text }}</p>
-                  <span><i class="fa-solid fa-check"></i></span>
-                  <span class="square"></span>
+              <li
+                @click="sideCheckTodo(todoItem, key)"
+                :class="{checked:todoItem.completed}"
+                class="todoItem"
+                v-for="(todoItem, key) in todoDataArr"
+                :key="key"
+              >
+                <p class="todoText">
+                  {{ todoItem.text }}
+                </p>
+                <span>
+                  <i class="fa-solid fa-check"></i>
+                </span>
+                <span class="square"></span>
               </li>
             </ul>
           </div>
@@ -56,73 +92,80 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import CalendarBlock from './calendar/CalendarBlock.vue'
-import CalendarSmall from './calendar/CalendarSmall.vue'
+import { mapState, mapGetters, mapMutations } from 'vuex'
+import CalendarBlock from '../calendar/CalendarBlock.vue'
+import CalendarSmall from '../calendar/CalendarSmall.vue'
 export default {
   components: {
     CalendarSmall,
     CalendarBlock
   },
   computed: {
-    ...mapState(['literalMonths', 'literalTodayDate', 'todoData']),
-    ...mapGetters(['setSideYear', 'setSideMonth', 'setDay', 'todoData']),
+    ...mapState([
+      'fetchedDate',
+      'booleanBurger',
+      'sideLoadedDates',
+      'sideFetchedDate',
+      'todayDate',
+      'literalMonths',
+      'literalTodayDate',
+      'todoData'
+    ]),
+    ...mapGetters([
+      'setSideYear',
+      'setSideMonth'
+    ]),
+    haveTodayTodo () {
+      return this.todoData[`${this.literalTodayDate.join(',')}`] !== undefined
+    },
+    todoDataArr () {
+      return this.todoData[`${this.literalTodayDate.join(',')}`]
+    },
+    setLiteralMonths () {
+      return this.literalMonths[Number(this.setSideMonth) - 1]
+    }
   },
   methods: {
-    data () {
-      return {
-        todayTodoArr: [],
-      }
-    },
+    ...mapMutations([
+      'changeSideCalendar',
+      'changeFetchedDate',
+      'setSideFetchedDateToToday'
+    ]),
     showPrev () {
-      let yearData
-      let monthData
-      let dateData
-      yearData = this.$store.state.sideFetchedDate.getFullYear()
-      monthData = this.$store.state.sideFetchedDate.getMonth()-1
-      dateData = this.$store.state.sideFetchedDate.getDate()
-      const fetchSidePrev = new Date (yearData, monthData, dateData)
-      this.$store.commit('changeSideCalendar', fetchSidePrev)
+      this.changeSideCalendar({ type: 'showPrev' })
     },
     showNext () {
-      let yearData
-      let monthData
-      let dateData
-      yearData = this.$store.state.sideFetchedDate.getFullYear()
-      monthData = this.$store.state.sideFetchedDate.getMonth()+1
-      dateData = this.$store.state.sideFetchedDate.getDate()
-      const fetchSideNext = new Date (yearData, monthData, dateData)
-      this.$store.commit('changeSideCalendar', fetchSideNext)
+      this.changeSideCalendar({ type: 'showNext' })
     },
     fetchMonthlyCalendar (day) {
-      console.log(day)
-      this.$store.commit('changeFetchedDate', new Date(day[0], day[1]-1, day[2]))
+      this.changeFetchedDate(new Date(day[0], day[1] - 1, day[2]))
     },
     sideCheckTodo (todoItem, key) {
-      console.log(todoItem)
-      console.log(key)
-
       this.todoData[`${this.literalTodayDate.join(',')}`][key].completed = !this.todoData[`${this.literalTodayDate.join(',')}`][key].completed
     },
+    checkFetched (day) {
+      return day[0] === this.fetchedDate.getFullYear() && day[1] === (this.fetchedDate.getMonth() + 1) && day[2] === this.fetchedDate.getDate()
+    }
   },
   created () {
-    this.$store.state.sideFetchedDate = this.$store.state.todayDate
-    this.$store.commit('changeSideCalendar', this.$store.state.todayDate)
-  },
+    this.setSideFetchedDateToToday()
+    this.changeSideCalendar({ type: 'showToday' })
+  }
 }
 </script>
 
 <style scoped>
     .boxSideBar {
-        background: rgba(255, 255, 255, 1);
+      background: rgba(255, 255, 255, 1);
       box-shadow: rgba(0, 0, 0, 0.35) 0px 0px 30px inset;
       display: block;
-        min-height: 95vh;
-        height: auto;
+      min-height: 95vh;
+      height: auto;
+      overflow: hidden;
     }
     .others {
       padding-top: 4vh;
-      transition: .3s .1s;
+      transition: .3s .0s;
       transform: translateX(0%);
       opacity: 1;
     }
@@ -136,12 +179,20 @@ export default {
     width: 280px;
     height: 240px;
     height: auto;
-      box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.35);
-
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.35);
     margin: auto;
     margin-bottom: 30px;
     padding: 20px 0;
-
+    }
+    .toolBoxContent .block .dateSpan {
+      display: inline-block;
+      border-radius: 100%;
+    }
+    .toolBoxContent .block:hover .dateSpan {
+      color: rgba(0, 0, 0, 0.9)
+    }
+    .toolBoxContent .block .dateSpan.activeFetched {
+      color: rgba(0, 0, 0, 0.9)
     }
     .others .toolBox .toolBoxTitle {
       margin: 0 20px 20px 20px;

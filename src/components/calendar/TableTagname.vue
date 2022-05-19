@@ -1,6 +1,6 @@
 <template>
   <div class="daynameList">
-    <template v-if="selectedCalendarType === 'Weekly' || selectedCalendarType === 'Monthly'">
+    <template v-if="isTypeWeeklyMonthly">
         <div class="dayname sun">
             <h1>sun</h1>
         </div>
@@ -28,10 +28,16 @@
 
 <script>
 import { mapState } from 'vuex'
+import { TypeMixin } from '../../mixins/TypeMixin'
 export default {
-    computed: {
-        ...mapState(['selectedCalendarType']),
-  },
+  mixins: [
+    TypeMixin
+  ],
+  computed: {
+    ...mapState([
+      'selectedCalendarType'
+    ])
+  }
 }
 </script>
 

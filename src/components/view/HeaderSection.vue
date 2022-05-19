@@ -1,52 +1,67 @@
 <template>
   <div class="box">
     <div class="title">
-        <div class="burger" v-on:click="this.toggleBurger">
+        <div
+          class="burger"
+          @click="toggleBurger"
+        >
           <span></span>
           <span></span>
           <span></span>
         </div>
-        <span class="headerCalendar">{{ this.todoyDateDay }}</span>
-        <p class="hdTitle" v-on:click="this.doReload">Calendar</p>
+        <span class="headerCalendar">
+          {{ todoyDateDay }}
+        </span>
+        <p
+          class="hdTitle"
+          @click="doReload"
+        >
+          Calendar
+        </p>
     </div>
     <ul class="navi">
-      <router-link :to="`/project/todo-calendar/`" class="routerLink">
+      <router-link
+        :to="`/project/todo-calendar/`"
+        class="routerLink"
+      >
         <li>Calendar</li>
       </router-link>
-      <router-link :to="`/project/todo-calendar/todo`" class="routerLink">
-        <li>Todo List</li>
+      <router-link
+        :to="`/project/todo-calendar/todo`"
+        class="routerLink"
+      >
+        <li>
+          Todo List
+        </li>
       </router-link>
-      <!-- <li>Todo List</li> -->
     </ul>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 export default {
   computed: {
-    ...mapState(['selectedCalendarType']),
-    ...mapGetters(['setYear', 'setMonth', 'setDate', 'setDay', 'getPrevMonth', 'getNextMonth', 'getPrevWeek', 'getNextWeek', 'getPrevDate', 'getNextDate', 'todoyDateDay']),
+    ...mapState([
+      'todoyDate',
+      'booleanBurger'
+    ]),
+    ...mapGetters([
+      'todoyDateDay'
+    ])
   },
   methods: {
-    checkRouter () {
-      console.log(this.$router.currentRoute.path)
-    },
-    fetchToday () {
-      const fetchedToday = new Date()
-      this.$store.state.todayDate = fetchedToday
-      this.$store.commit('changeFetchedDate', fetchedToday)
-    },
+    ...mapMutations([
+      'changeFetchedDate',
+      'setStateToggleBurger'
+    ]),
     toggleBurger () {
-      this.$store.state.booleanBurger = !this.$store.state.booleanBurger
+      this.setStateToggleBurger()
     },
     doReload () {
       location.pathname = '/project/todo-calendar/'
     }
-  },
-created () {
-    this.fetchToday()
-  },
+  }
 }
 </script>
 
@@ -120,21 +135,10 @@ created () {
     font-size: 0.85rem;
     padding: 5px 0px;
     margin: 0 5px;
-    /* border: 2px solid rgba(0, 0, 0, 0.15); */
-    /* border-radius: 15px; */
-    /* box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px; */
   }
-  /* .navi li:hover {
-    background: rgba(139, 192, 235, 0.3);
-  } */
   .navi li.active {
     background: rgba(139, 192, 235, 0.7);
-    /* border: 1px solid rgba(139, 192, 235, 1); */
-    /* box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px inset; */
-  } 
-  /* .router-link-active {
-    color: red;
-  } */
+  }
   .routerLink {
     text-decoration: none;
     color: rgba(0, 0, 0, 0.65);
@@ -142,23 +146,15 @@ created () {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 10px;
     font-weight: bolder;
     margin: 0 5px;
-    /* color: rgba(139, 192, 235, 1); */
-
 
   }
     .routerLink:hover {
     box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 5px;
-    /* background: rgba(139, 192, 235, 0.5); */
   }
-  /* router active */
   .router-link-exact-active {
-    /* color: blue; */
-    /* background: rgba(139, 192, 235, 1); */
     color: white;
     box-shadow: rgba(0, 0, 0, 0.85) 0px 0px 18px inset;
     background: rgba(0, 0, 0, 0.65);
-
-
   }
   .router-link-exact-active:hover {
     background: rgba(0, 0, 0, 0.65);

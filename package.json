@@ -18,10 +18,15 @@
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
     "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-eslint": "^5.0.4",
     "@vue/cli-service": "~5.0.0",
+    "@vue/eslint-config-standard": "^6.1.0",
     "eslint": "^7.32.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-vue": "^8.0.3",
+    "lint-staged": "^11.1.2",
     "vue-template-compiler": "^2.6.14",
     "webpack-dev-server": "^4.8.1"
   },
@@ -31,7 +36,8 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential"
+      "plugin:vue/essential",
+      "@vue/standard"
     ],
     "parserOptions": {
       "parser": "@babel/eslint-parser"
@@ -42,5 +48,8 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  }
 }
