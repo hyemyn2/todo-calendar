@@ -5,7 +5,7 @@
           v-if="isTypeYearly"
         >
           <p class="headerDate">
-            {{ setYear }}
+            {{ setMainYear }}
           </p>
         </template>
         <template v-else>
@@ -14,7 +14,7 @@
               {{ setLiteralMonths }}
             </p>
             <p>
-              {{ setYear }}
+              {{ setMainYear }}
             </p>
           </div>
         </template>
@@ -84,35 +84,35 @@ export default {
       'fetchedDate'
     ]),
     ...mapGetters([
-      'setYear',
-      'setMonth'
+      'setMainYear',
+      'setMainMonth'
     ]),
     setLiteralMonths () {
-      return this.literalMonths[this.setMonth - 1]
+      return this.literalMonths[this.setMainMonth - 1]
     }
   },
   methods: {
     ...mapMutations([
-      'changeFetchedDate',
-      'selectCalendarType',
-      'showCalendarTypes',
-      'changeMainCalendar'
+      'CHANGE_FETCHED_DATE',
+      'SELECT_CALENDAR_TYPE',
+      'SHOW_CALENDAR_TYPES',
+      'CHANGE_MAIN_CALENDAR'
     ]),
     showToday () {
-      this.changeMainCalendar({ type: 'showToday' })
+      this.CHANGE_MAIN_CALENDAR({ type: 'showToday' })
     },
     showPrevPage () {
-      this.changeMainCalendar({ type: 'showPrev' })
+      this.CHANGE_MAIN_CALENDAR({ type: 'showPrev' })
     },
     showNextPage () {
-      this.changeMainCalendar({ type: 'showNext' })
+      this.CHANGE_MAIN_CALENDAR({ type: 'showNext' })
     },
     selectType (event) {
-      this.selectCalendarType(event.target.dataset.num)
-      this.changeFetchedDate(this.fetchedDate)
+      this.SELECT_CALENDAR_TYPE(event.target.dataset.num)
+      this.CHANGE_FETCHED_DATE(this.fetchedDate)
     },
     showTypes () {
-      this.showCalendarTypes()
+      this.SHOW_CALENDAR_TYPES()
     }
   }
 }

@@ -15,7 +15,8 @@
   </transition>
 </template>
 
-<script></script>
+<script>
+</script>
 
 <style scoped>
 .modal-mask {

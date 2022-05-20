@@ -1,5 +1,25 @@
+import {
+  CHANGE_MAIN_CALENDAR,
+  CHANGE_FETCHED_DATE,
+  FIGURE_DATES_YEARLY,
+  FIGURE_DATES_MONTHLY,
+  FIGURE_DATES_WEEKLY,
+  FIGURE_DATES_DAILY,
+  CHANGE_SIDE_CALENDAR,
+  ADD_NEW_TODO,
+  CHECK_TODO_ITEM,
+  DELETE_TODO_ITEM,
+  SET_MODAL_DATA,
+  SELECT_CALENDAR_TYPE,
+  SHOW_CALENDAR_TYPES,
+  SET_STATE_OFF_MODAL_TODO,
+  SET_STATE_TOGGLE_BURGER,
+  SET_SIDE_FETCHED_DATE_TO_TODAY,
+  SET_STATE_SHOW_MODAL_PAGE
+} from './mutation-types'
+
 export default {
-  changeMainCalendar (state, payload) {
+  [CHANGE_MAIN_CALENDAR] (state, payload) {
     let yearData = state.fetchedDate.getFullYear()
     let monthData = state.fetchedDate.getMonth()
     let dateData = state.fetchedDate.getDate()
@@ -28,35 +48,35 @@ export default {
       monthData = state.todayDate.getMonth()
       dateData = state.todayDate.getDate()
     }
-    this.commit('changeFetchedDate', new Date(yearData, monthData, dateData))
+    this.commit(CHANGE_FETCHED_DATE, new Date(yearData, monthData, dateData))
   },
-  changeFetchedDate (state, payload) {
+  [CHANGE_FETCHED_DATE] (state, payload) {
     state.fetchedDate = payload
-    if (this.state.selectedCalendarType === 'Monthly') {
-      this.commit('figureDatesMonthly', { newDate: payload })
+    if (state.selectedCalendarType === 'Monthly') {
+      this.commit(FIGURE_DATES_MONTHLY, { newDate: payload })
       state.loadedDates = state.savedCalendarDates
-    } else if (this.state.selectedCalendarType === 'Weekly') {
-      this.commit('figureDatesWeekly', { newDate: payload })
+    } else if (state.selectedCalendarType === 'Weekly') {
+      this.commit(FIGURE_DATES_WEEKLY, { newDate: payload })
       state.loadedDates = state.savedCalendarDates
-    } else if (this.state.selectedCalendarType === 'Daily') {
-      this.commit('figureDatesDaily', { newDate: payload })
+    } else if (state.selectedCalendarType === 'Daily') {
+      this.commit(FIGURE_DATES_DAILY, { newDate: payload })
       state.loadedDates = state.savedCalendarDates
-    } else if (this.state.selectedCalendarType === 'Yearly') {
-      this.commit('figureDatesYearly', { newDate: payload })
+    } else if (state.selectedCalendarType === 'Yearly') {
+      this.commit(FIGURE_DATES_YEARLY, { newDate: payload })
       state.loadedDates = state.savedYearlyCalendarDates
     }
   },
-  figureDatesYearly (state, payload) {
+  [FIGURE_DATES_YEARLY] (state, payload) {
     const yearlyCalendarDates = []
     for (let i = 0; i < 12; i++) {
       const newPayload = new Date(payload.newDate.getFullYear(), i, payload.newDate.getDate())
-      this.commit('figureDatesMonthly', { newDate: newPayload })
+      this.commit(FIGURE_DATES_MONTHLY, { newDate: newPayload })
       const eachMonthDates = state.savedCalendarDates
       yearlyCalendarDates.push(eachMonthDates)
     }
     state.savedYearlyCalendarDates = yearlyCalendarDates
   },
-  figureDatesMonthly (state, payload) {
+  [FIGURE_DATES_MONTHLY] (state, payload) {
     let calendarDates = []
     let shownPrevDates = []
     let shownNextDates = []
@@ -87,7 +107,7 @@ export default {
     calendarDates = shownPrevDates.concat(shownThisDates, shownNextDates)
     state.savedCalendarDates = calendarDates
   },
-  figureDatesWeekly (state, payload) {
+  [FIGURE_DATES_WEEKLY] (state, payload) {
     const calendarDates = []
     for (let i = 0; i < 7; i++) {
       const theDay = new Date(payload.newDate.getFullYear(), payload.newDate.getMonth(), payload.newDate.getDate() - payload.newDate.getDay() + i)
@@ -95,11 +115,11 @@ export default {
     }
     state.savedCalendarDates = calendarDates
   },
-  figureDatesDaily (state, payload) {
+  [FIGURE_DATES_DAILY] (state, payload) {
     const calendarDates = [[payload.newDate.getFullYear(), payload.newDate.getMonth() + 1, payload.newDate.getDate()]]
     state.savedCalendarDates = calendarDates
   },
-  changeSideCalendar (state, payload) {
+  [CHANGE_SIDE_CALENDAR] (state, payload) {
     let yearData, monthData, dateData
     if (payload.type === 'showPrev') {
       yearData = state.sideFetchedDate.getFullYear()
@@ -116,10 +136,10 @@ export default {
     }
     const fetchedNewDate = new Date(yearData, monthData, dateData)
     state.sideFetchedDate = fetchedNewDate
-    this.commit('figureDatesMonthly', { newDate: fetchedNewDate })
+    this.commit(FIGURE_DATES_MONTHLY, { newDate: fetchedNewDate })
     state.sideLoadedDates = state.savedCalendarDates
   },
-  addNewTodo (state, payload) {
+  [ADD_NEW_TODO] (state, payload) {
     const newTodo = { text: payload, completed: false }
     state.modalTodo.push(newTodo)
     state.todoData[state.modalDate] = state.modalTodo
@@ -129,11 +149,11 @@ export default {
       getLocalStorage = JSON.parse(localStorage.getItem('todos'))
     }
     state.todoData = getLocalStorage
-
     const copyModalTodo = [...state.modalTodo]
     state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / 8))].map(i => copyModalTodo.splice(i * 8, 8))
+    state.fetchedModalPage = state.modalTodoDivided.length - 1
   },
-  checkTodoItem (state, payload) {
+  [CHECK_TODO_ITEM] (state, payload) {
     const key = payload.pageKey * 8 + Number(payload.key)
     state.modalTodo[key].completed = !payload.todoItem.completed
     state.todoData[state.modalDate] = state.modalTodo
@@ -147,7 +167,7 @@ export default {
     const copyModalTodo = [...state.modalTodo]
     state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / 8))].map(i => copyModalTodo.splice(i * 8, 8))
   },
-  deleteTodoItem (state, payload) {
+  [DELETE_TODO_ITEM] (state, payload) {
     const pageLength = state.modalTodoDivided.length
     const key = payload.pageKey * 8 + Number(payload.key)
     state.modalTodo.splice(key, 1)
@@ -163,11 +183,11 @@ export default {
     state.todoData = getLocalStorage
     const copyModalTodo = [...state.modalTodo]
     state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / 8))].map(i => copyModalTodo.splice(i * 8, 8))
-    if ((state.modalTodoDivided.length !== pageLength) && (state.modalTodoDivided.length === payload.pageKey)) {
-      console.log('success')
+    if ((state.fetchedModalPage !== state.modalTodoDivided.length - 1) && (state.modalTodoDivided[pageLength - 1] === undefined)) {
+      state.fetchedModalPage--
     }
   },
-  setModalData (state, payload) {
+  [SET_MODAL_DATA] (state, payload) {
     state.showModal = true
     const clickedDate = payload.target.id
     state.modalDate = clickedDate
@@ -179,23 +199,27 @@ export default {
     const copyModalTodo = [...state.modalTodo]
     state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / 8))].map(i => copyModalTodo.splice(i * 8, 8))
   },
-  selectCalendarType (state, payload) {
+  [SELECT_CALENDAR_TYPE] (state, payload) {
     if (payload) {
       state.selectedCalendarType = state.calendarType[payload]
       state.allToggles.toggleCalendarType.booleanValue = false
     }
   },
-  showCalendarTypes (state) {
+  [SHOW_CALENDAR_TYPES] (state) {
     state.allToggles.toggleCalendarType.booleanValue = !state.allToggles.toggleCalendarType.booleanValue
   },
-  setStatetOffModalTodo (state) {
+  [SET_STATE_OFF_MODAL_TODO] (state) {
     state.showModal = false
     state.modalTodo = []
+    state.fetchedModalPage = 0
   },
-  setStateToggleBurger (state) {
+  [SET_STATE_TOGGLE_BURGER] (state) {
     state.booleanBurger = !state.booleanBurger
   },
-  setSideFetchedDateToToday (state) {
+  [SET_SIDE_FETCHED_DATE_TO_TODAY] (state) {
     state.sideFetchedDate = state.todayDate
+  },
+  [SET_STATE_SHOW_MODAL_PAGE] (state, payload) {
+    state.fetchedModalPage = payload
   }
 }

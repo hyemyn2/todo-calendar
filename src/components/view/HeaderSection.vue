@@ -10,7 +10,7 @@
           <span></span>
         </div>
         <span class="headerCalendar">
-          {{ todoyDateDay }}
+          {{ setHeaderDate }}
         </span>
         <p
           class="hdTitle"
@@ -47,16 +47,16 @@ export default {
       'booleanBurger'
     ]),
     ...mapGetters([
-      'todoyDateDay'
+      'setHeaderDate'
     ])
   },
   methods: {
     ...mapMutations([
-      'changeFetchedDate',
-      'setStateToggleBurger'
+      'CHANGE_FETCHED_DATE',
+      'SET_STATE_TOGGLE_BURGER'
     ]),
     toggleBurger () {
-      this.setStateToggleBurger()
+      this.SET_STATE_TOGGLE_BURGER()
     },
     doReload () {
       location.pathname = '/project/todo-calendar/'

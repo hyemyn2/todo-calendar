@@ -127,18 +127,18 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'changeSideCalendar',
-      'changeFetchedDate',
-      'setSideFetchedDateToToday'
+      'CHANGE_SIDE_CALENDAR',
+      'CHANGE_FETCHED_DATE',
+      'SET_SIDE_FETCHED_DATE_TO_TODAY'
     ]),
     showPrev () {
-      this.changeSideCalendar({ type: 'showPrev' })
+      this.CHANGE_SIDE_CALENDAR({ type: 'showPrev' })
     },
     showNext () {
-      this.changeSideCalendar({ type: 'showNext' })
+      this.CHANGE_SIDE_CALENDAR({ type: 'showNext' })
     },
     fetchMonthlyCalendar (day) {
-      this.changeFetchedDate(new Date(day[0], day[1] - 1, day[2]))
+      this.CHANGE_FETCHED_DATE(new Date(day[0], day[1] - 1, day[2]))
     },
     sideCheckTodo (todoItem, key) {
       this.todoData[`${this.literalTodayDate.join(',')}`][key].completed = !this.todoData[`${this.literalTodayDate.join(',')}`][key].completed
@@ -148,8 +148,8 @@ export default {
     }
   },
   created () {
-    this.setSideFetchedDateToToday()
-    this.changeSideCalendar({ type: 'showToday' })
+    this.SET_SIDE_FETCHED_DATE_TO_TODAY()
+    this.CHANGE_SIDE_CALENDAR({ type: 'showToday' })
   }
 }
 </script>

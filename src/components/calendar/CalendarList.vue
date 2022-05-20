@@ -125,16 +125,16 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'changeFetchedDate',
-      'setModalData'
+      'CHANGE_FETCHED_DATE',
+      'SET_MODAL_DATA'
     ]),
     fetchClickedDay (event) {
       const dateString = event.target.id.split(',')
       const dateConstructor = new Date(dateString[0], dateString[1] - 1, dateString[2])
-      this.changeFetchedDate(dateConstructor)
+      this.CHANGE_FETCHED_DATE(dateConstructor)
     },
     showModalTodo (event) {
-      this.setModalData(event)
+      this.SET_MODAL_DATA(event)
     },
     renderTodo (day) {
       const renderDate = day.join(',')
@@ -294,7 +294,7 @@ export default {
     margin: 20px 0 20px 10px ;
     text-align: left;
   }
-  .activeFetched {
-    background: rgb(0, 0, 0, 0.1);
+  .calendarBlock.activeFetched {
+    background: rgb(226, 242, 255, 0.5);
   }
 </style>

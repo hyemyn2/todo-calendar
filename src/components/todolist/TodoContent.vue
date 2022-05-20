@@ -138,13 +138,11 @@
 
 <script>
 import CommonModal from '../common/CommonModal.vue'
-import { ModalMixin } from '../../mixins/ModalMixin'
-import { TodoMixin } from '../../mixins/TodoMixin'
+import { TodoModal } from '../../mixins/TodoModal'
 import { mapMutations, mapState } from 'vuex'
 export default {
   mixins: [
-    ModalMixin,
-    TodoMixin
+    TodoModal
   ],
   components: {
     CommonModal
@@ -160,11 +158,12 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'addNewTodo',
-      'checkTodoItem',
-      'deleteTodoItem',
-      'setModalData',
-      'setStatetOffModalTodo'
+      'ADD_NEW_TODO',
+      'CHECK_TODO_ITEM',
+      'DELETE_TODO_ITEM',
+      'SET_MODAL_DATA',
+      'SET_STATE_OFF_MODAL_TODO',
+      'SET_STATE_SHOW_MODAL_PAGE'
     ]),
     todoDates () {
       const dateArr = Object.keys(this.todoData).sort()
@@ -187,7 +186,7 @@ export default {
       this.listType = type
     },
     showModalTodo (event) {
-      this.setModalData(event)
+      this.SET_MODAL_DATA(event)
     },
     checkAllCompleted (date) {
       const arr = this.todoItems(date).map(i => i.completed)
@@ -204,64 +203,60 @@ export default {
 <style scoped>
 
 .boxTodo {
-    width: 80%;
-    padding-top: 30px;
+  width: 80%;
+  padding-top: 30px;
 }
 .boxTodo .divLine {
-    box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);
+  box-shadow: 0px 0px 30px rgba(0, 0, 0, 0.4);
 }
 .btnlistType {
-    width: 100%;
-    margin-bottom: 15px;
-    text-align: right;
+  width: 100%;
+  margin-bottom: 15px;
+  text-align: right;
 }
 .btnlistType span {
-    display: inline-block;
-    padding: 5px;
+  display: inline-block;
+  padding: 5px;
 }
 .btnlistType span:hover i {
-    color: rgba(44, 116, 138, 0.8)
+  color: rgba(44, 116, 138, 0.8)
 }
 .btnlistType span i.active {
-    color: rgba(44, 116, 138, 0.8)
+  color: rgba(44, 116, 138, 0.8)
 }
 .divLine .listBox {
-    cursor: pointer;
+  cursor: pointer;
 }
 .divLine .listBox:hover {
-        background: rgba(83, 104, 110, 0.5);
-    }
-.divLine section {
-    pointer-events: none;
-    display: flex;
-    align-items: flex-start;
-    padding: 20px 0;
-    margin: 10px 0;
-    width: 100%;
-    margin: auto;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  background: rgba(204, 237, 247, 0.3);
 }
-
-.divLine section.sectionCompleted {
-    background: rgba(189, 199, 202, 0.5);
+.divLine section {
+  pointer-events: none;
+  display: flex;
+  align-items: flex-start;
+  padding: 20px 0;
+  margin: 10px 0;
+  width: 100%;
+  margin: auto;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 
 .divLine section.sectionCompleted ul li {
-    width: 100%;
-    font-size: 1.2rem;
-    text-align: center;
-    color: rgba(83, 104, 110, 0.5);
-    margin-top: 10px;
+  width: 100%;
+  font-size: 1.2rem;
+  text-align: center;
+  /* color: rgba(83, 104, 110, 0.5); */
+  margin-top: 10px;
 }
 .divLine section.sectionCompleted ul li i {
-    margin-right: 140px;
-    margin-left: 5px;
-    font-size: 1.2rem;
-    color: rgba(83, 104, 110, 0.5);
+  margin-right: 140px;
+  margin-left: 5px;
+  font-size: 1.2rem;
+  /* color: rgba(83, 104, 110, 0.5); */
 }
-.divLine section.sectionCompleted .titleDate {
-    opacity: 0.5;
-}
+/* .divLine section.sectionCompleted .titleDate {
+  opacity: 0.5;
+} */
 
 .sectionBox .titleDate {
     pointer-events: none;
@@ -269,7 +264,7 @@ export default {
     width: 20%;
     font-weight: bolder;
     font-size: 0.8rem;
-    color: rgba(0, 0, 0, 0.5);
+    /* color: rgba(0, 0, 0, 0.5); */
 }
 .sectionBox .titleDate p {
     font-size: 1.4rem;
@@ -361,8 +356,17 @@ section ul {
       border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     }
     .todoList li:hover {
-      background: rgba(198, 233, 253, 0.3)
+      background: rgba(198, 233, 253, 0.3);
     }
+    .divLine section.sectionCompleted {
+        /* background: rgba(189, 199, 202, 0.5); */
+        opacity: 0.6;
+    }
+    .divLine section.sectionCompleted:hover {
+        /* background: rgba(189, 199, 202, 0.5); */
+        opacity: 1;
+    }
+
     .todoList li:hover span i{
       opacity: 1;
     }

@@ -58,20 +58,20 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'changeFetchedDate',
-      'setModalData'
+      'CHANGE_FETCHED_DATE',
+      'SET_MODAL_DATA'
     ]),
     fetchClickedDay (event) {
       const dateString = event.target.id.split(',')
       const dateConstructor = new Date(dateString[0], dateString[1] - 1, dateString[2])
       this.$store.state.fetchedDate = dateConstructor
       if (Number(dateString[0]) !== this.loadedYear) {
-        this.changeFetchedDate(dateConstructor)
+        this.CHANGE_FETCHED_DATE(dateConstructor)
         this.loadedYear = Number(dateString[0])
       }
     },
     showModalTodo (event) {
-      this.setModalData(event)
+      this.seSET_MODAL_DATAtModalData(event)
     },
     isYearlyFetchedDate (day, key) {
       return (day[0] === this.fetchedDateString[0] && day[1] === this.fetchedDateString[1] && day[2] === this.fetchedDateString[2]) && (this.selectedCalendarType === 'Yearly') && ((key + 1) === this.fetchedDateString[1])

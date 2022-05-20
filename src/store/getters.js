@@ -1,15 +1,9 @@
 export default {
-  setYear (state) {
+  setMainYear (state) {
     return state.fetchedDate.getFullYear()
   },
-  setMonth (state) {
+  setMainMonth (state) {
     return Number(state.fetchedDate.getMonth() + 1)
-  },
-  setDate (state) {
-    return state.fetchedDate.getDate()
-  },
-  setDay (state) {
-    return state.fetchedDate.getDay()
   },
   setSideYear (state) {
     return state.sideFetchedDate.getFullYear()
@@ -17,13 +11,7 @@ export default {
   setSideMonth (state) {
     return Number(state.sideFetchedDate.getMonth() + 1)
   },
-  setSideDate (state) {
-    return state.sideFetchedDate.getDate()
-  },
-  setSideDay (state) {
-    return state.sideFetchedDate.getDay()
-  },
-  todoyDateDay (state) {
+  setHeaderDate (state) {
     return state.todayDate.getDate()
   },
   fetchedDateString (state) {

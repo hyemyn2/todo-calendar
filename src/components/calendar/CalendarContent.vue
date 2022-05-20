@@ -130,13 +130,11 @@ import CalendarList from './CalendarList.vue'
 import CalendarYearly from './CalendarYearly.vue'
 import CommonModal from '../common/CommonModal.vue'
 import { mapState, mapMutations } from 'vuex'
-import { ModalMixin } from '../../mixins/ModalMixin'
-import { TodoMixin } from '../../mixins/TodoMixin'
+import { TodoModal } from '../../mixins/TodoModal'
 import { TypeMixin } from '../../mixins/TypeMixin'
 export default {
   mixins: [
-    ModalMixin,
-    TodoMixin,
+    TodoModal,
     TypeMixin
   ],
   components: {
@@ -156,10 +154,11 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setStatetOffModalTodo',
-      'addNewTodo',
-      'checkTodoItem',
-      'deleteTodoItem'
+      'SET_STATE_OFF_MODAL_TODO',
+      'ADD_NEW_TODO',
+      'CHECK_TODO_ITEM',
+      'DELETE_TODO_ITEM',
+      'SET_STATE_SHOW_MODAL_PAGE'
     ])
   }
 }

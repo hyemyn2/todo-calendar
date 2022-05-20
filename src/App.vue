@@ -32,7 +32,6 @@ export default {
   computed: {
     ...mapState([
       'allToggles',
-      'todayDate',
       'literalTodayDate',
       'booleanBurger',
       'todayDate'
@@ -40,13 +39,13 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'changeFetchedDate'
+      'CHANGE_FETCHED_DATE'
     ]),
     fetchToday () {
       const fetchedToday = new Date()
       this.$store.state.todayDate = fetchedToday
       this.$store.state.literalTodayDate = [fetchedToday.getFullYear(), fetchedToday.getMonth() + 1, fetchedToday.getDate()]
-      this.changeFetchedDate(this.$store.state.todayDate)
+      this.CHANGE_FETCHED_DATE(this.$store.state.todayDate)
     },
     togglesOff (event) {
       if (event.target.className !== this.allToggles.toggleCalendarType.excludeOffEvent) {
