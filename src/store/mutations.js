@@ -1,10 +1,5 @@
 import {
-  CHANGE_MAIN_CALENDAR,
   CHANGE_FETCHED_DATE,
-  FIGURE_DATES_YEARLY,
-  FIGURE_DATES_MONTHLY,
-  FIGURE_DATES_WEEKLY,
-  FIGURE_DATES_DAILY,
   CHANGE_SIDE_CALENDAR,
   ADD_NEW_TODO,
   CHECK_TODO_ITEM,
@@ -18,78 +13,31 @@ import {
   SET_STATE_SHOW_MODAL_PAGE
 } from './mutation-types'
 
-export default {
-  [CHANGE_MAIN_CALENDAR] (state, payload) {
-    let yearData = state.fetchedDate.getFullYear()
-    let monthData = state.fetchedDate.getMonth()
-    let dateData = state.fetchedDate.getDate()
-    if (payload.type === 'showPrev') {
-      if (state.selectedCalendarType === 'Monthly') {
-        monthData = state.fetchedDate.getMonth() - 1
-      } else if (state.selectedCalendarType === 'Weekly') {
-        dateData = state.fetchedDate.getDate() - 7
-      } else if (state.selectedCalendarType === 'Daily') {
-        dateData = state.fetchedDate.getDate() - 1
-      } else if (state.selectedCalendarType === 'Yearly') {
-        yearData = state.fetchedDate.getFullYear() - 1
-      }
-    } else if (payload.type === 'showNext') {
-      if (state.selectedCalendarType === 'Monthly') {
-        monthData = state.fetchedDate.getMonth() + 1
-      } else if (state.selectedCalendarType === 'Weekly') {
-        dateData = state.fetchedDate.getDate() + 7
-      } else if (state.selectedCalendarType === 'Daily') {
-        dateData = state.fetchedDate.getDate() + 1
-      } else if (state.selectedCalendarType === 'Yearly') {
-        yearData = state.fetchedDate.getFullYear() + 1
-      }
-    } else if (payload.type === 'showToday') {
-      yearData = state.todayDate.getFullYear()
-      monthData = state.todayDate.getMonth()
-      dateData = state.todayDate.getDate()
-    }
-    this.commit(CHANGE_FETCHED_DATE, new Date(yearData, monthData, dateData))
-  },
-  [CHANGE_FETCHED_DATE] (state, payload) {
-    state.fetchedDate = payload
-    if (state.selectedCalendarType === 'Monthly') {
-      this.commit(FIGURE_DATES_MONTHLY, { newDate: payload })
-      state.loadedDates = state.savedCalendarDates
-    } else if (state.selectedCalendarType === 'Weekly') {
-      this.commit(FIGURE_DATES_WEEKLY, { newDate: payload })
-      state.loadedDates = state.savedCalendarDates
-    } else if (state.selectedCalendarType === 'Daily') {
-      this.commit(FIGURE_DATES_DAILY, { newDate: payload })
-      state.loadedDates = state.savedCalendarDates
-    } else if (state.selectedCalendarType === 'Yearly') {
-      this.commit(FIGURE_DATES_YEARLY, { newDate: payload })
-      state.loadedDates = state.savedYearlyCalendarDates
-    }
-  },
-  [FIGURE_DATES_YEARLY] (state, payload) {
+const storage = {
+  figureDatesYearly (state, variableDate) {
     const yearlyCalendarDates = []
     for (let i = 0; i < 12; i++) {
-      const newPayload = new Date(payload.newDate.getFullYear(), i, payload.newDate.getDate())
-      this.commit(FIGURE_DATES_MONTHLY, { newDate: newPayload })
-      const eachMonthDates = state.savedCalendarDates
+      const newPayload = new Date(variableDate.getFullYear(), i, variableDate.getDate())
+      const eachMonthDates = this.figureDatesMonthly(state, newPayload)
       yearlyCalendarDates.push(eachMonthDates)
     }
     state.savedYearlyCalendarDates = yearlyCalendarDates
+    return yearlyCalendarDates
   },
-  [FIGURE_DATES_MONTHLY] (state, payload) {
+  figureDatesMonthly (state, variableDate) {
     let calendarDates = []
     let shownPrevDates = []
     let shownNextDates = []
     let shownThisDates = []
-    const thisMonthLast = new Date(payload.newDate.getFullYear(), payload.newDate.getMonth() + 1, 0)
+    const thisMonthLast = new Date(variableDate.getFullYear(), variableDate.getMonth() + 1, 0)
     const thisMonthLastDate = thisMonthLast.getDate()
     const thisMonthLastDay = thisMonthLast.getDay()
 
-    const prevMonthLast = new Date(payload.newDate.getFullYear(), payload.newDate.getMonth(), 0)
+    const prevMonthLast = new Date(variableDate.getFullYear(), variableDate.getMonth(), 0)
     const prevMonthLastDate = prevMonthLast.getDate()
     const prevMonthLastDay = prevMonthLast.getDay()
 
-    const nextMonthLast = new Date(payload.newDate.getFullYear(), payload.newDate.getMonth() + 2, 0)
+    const nextMonthLast = new Date(variableDate.getFullYear(), variableDate.getMonth() + 2, 0)
 
     shownPrevDates = []
     if (prevMonthLastDay !== 6) {
@@ -106,18 +54,36 @@ export default {
     shownThisDates = [...Array(thisMonthLastDate).keys()].map(key => [thisMonthLast.getFullYear(), thisMonthLast.getMonth() + 1, key + 1])
     calendarDates = shownPrevDates.concat(shownThisDates, shownNextDates)
     state.savedCalendarDates = calendarDates
+    return calendarDates
   },
-  [FIGURE_DATES_WEEKLY] (state, payload) {
+  figureDatesWeekly (state, variableDate) {
     const calendarDates = []
     for (let i = 0; i < 7; i++) {
-      const theDay = new Date(payload.newDate.getFullYear(), payload.newDate.getMonth(), payload.newDate.getDate() - payload.newDate.getDay() + i)
+      const theDay = new Date(variableDate.getFullYear(), variableDate.getMonth(), variableDate.getDate() - variableDate.getDay() + i)
       calendarDates.push([theDay.getFullYear(), theDay.getMonth() + 1, theDay.getDate()])
     }
     state.savedCalendarDates = calendarDates
+    return calendarDates
   },
-  [FIGURE_DATES_DAILY] (state, payload) {
-    const calendarDates = [[payload.newDate.getFullYear(), payload.newDate.getMonth() + 1, payload.newDate.getDate()]]
+  figureDatesDaily (state, variableDate) {
+    const calendarDates = [[variableDate.getFullYear(), variableDate.getMonth() + 1, variableDate.getDate()]]
     state.savedCalendarDates = calendarDates
+    return calendarDates
+  }
+}
+
+export default {
+  [CHANGE_FETCHED_DATE] (state, payload) {
+    state.fetchedDate = payload
+    if (state.selectedCalendarType === 'Monthly') {
+      state.loadedDates = storage.figureDatesMonthly(state, state.fetchedDate)
+    } else if (state.selectedCalendarType === 'Weekly') {
+      state.loadedDates = storage.figureDatesWeekly(state, state.fetchedDate)
+    } else if (state.selectedCalendarType === 'Daily') {
+      state.loadedDates = storage.figureDatesDaily(state, state.fetchedDate)
+    } else if (state.selectedCalendarType === 'Yearly') {
+      state.loadedDates = storage.figureDatesYearly(state, state.fetchedDate)
+    }
   },
   [CHANGE_SIDE_CALENDAR] (state, payload) {
     let yearData, monthData, dateData
@@ -136,8 +102,7 @@ export default {
     }
     const fetchedNewDate = new Date(yearData, monthData, dateData)
     state.sideFetchedDate = fetchedNewDate
-    this.commit(FIGURE_DATES_MONTHLY, { newDate: fetchedNewDate })
-    state.sideLoadedDates = state.savedCalendarDates
+    state.sideLoadedDates = storage.figureDatesMonthly(state, fetchedNewDate)
   },
   [ADD_NEW_TODO] (state, payload) {
     const newTodo = { text: payload, completed: false }

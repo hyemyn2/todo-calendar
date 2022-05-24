@@ -52,7 +52,6 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'CHANGE_FETCHED_DATE',
       'SET_STATE_TOGGLE_BURGER'
     ]),
     toggleBurger () {

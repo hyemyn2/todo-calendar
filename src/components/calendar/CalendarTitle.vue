@@ -81,11 +81,21 @@ export default {
       'selectedCalendarType',
       'literalMonths',
       'allToggles',
-      'fetchedDate'
+      'fetchedDate',
+      'todayDate',
+      'yearData',
+      'MonthData',
+      'DateData'
     ]),
     ...mapGetters([
       'setMainYear',
-      'setMainMonth'
+      'setMainMonth',
+      'fetchedDateYear',
+      'fetchedDateMonth',
+      'fetchedDateDate',
+      'todayDateYear',
+      'todayDateMonth',
+      'todayDateDate'
     ]),
     setLiteralMonths () {
       return this.literalMonths[this.setMainMonth - 1]
@@ -95,17 +105,32 @@ export default {
     ...mapMutations([
       'CHANGE_FETCHED_DATE',
       'SELECT_CALENDAR_TYPE',
-      'SHOW_CALENDAR_TYPES',
-      'CHANGE_MAIN_CALENDAR'
+      'SHOW_CALENDAR_TYPES'
     ]),
     showToday () {
-      this.CHANGE_MAIN_CALENDAR({ type: 'showToday' })
+      this.CHANGE_FETCHED_DATE(new Date(this.todayDateYear, this.todayDateMonth, this.todayDateDate))
     },
     showPrevPage () {
-      this.CHANGE_MAIN_CALENDAR({ type: 'showPrev' })
+      if (this.selectedCalendarType === 'Monthly') {
+        this.CHANGE_FETCHED_DATE(new Date(this.fetchedDateYear, this.fetchedDateMonth - 1, this.fetchedDateDate))
+      } else if (this.selectedCalendarType === 'Weekly') {
+        this.CHANGE_FETCHED_DATE(new Date(this.fetchedDateYear, this.fetchedDateMonth, this.fetchedDateDate - 7))
+      } else if (this.selectedCalendarType === 'Daily') {
+        this.CHANGE_FETCHED_DATE(new Date(this.fetchedDateYear, this.fetchedDateMonth, this.fetchedDateDate - 1))
+      } else if (this.selectedCalendarType === 'Yearly') {
+        this.CHANGE_FETCHED_DATE(new Date(this.fetchedDateYear - 1, this.fetchedDateMonth, this.fetchedDateDate))
+      }
     },
     showNextPage () {
-      this.CHANGE_MAIN_CALENDAR({ type: 'showNext' })
+      if (this.selectedCalendarType === 'Monthly') {
+        this.CHANGE_FETCHED_DATE(new Date(this.fetchedDateYear, this.fetchedDateMonth + 1, this.fetchedDateDate))
+      } else if (this.selectedCalendarType === 'Weekly') {
+        this.CHANGE_FETCHED_DATE(new Date(this.fetchedDateYear, this.fetchedDateMonth, this.fetchedDateDate + 7))
+      } else if (this.selectedCalendarType === 'Daily') {
+        this.CHANGE_FETCHED_DATE(new Date(this.fetchedDateYear, this.fetchedDateMonth, this.fetchedDateDate + 1))
+      } else if (this.selectedCalendarType === 'Yearly') {
+        this.CHANGE_FETCHED_DATE(new Date(this.fetchedDateYear + 1, this.fetchedDateMonth, this.fetchedDateDate))
+      }
     },
     selectType (event) {
       this.SELECT_CALENDAR_TYPE(event.target.dataset.num)

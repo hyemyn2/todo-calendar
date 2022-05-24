@@ -1,4 +1,7 @@
 export default {
+  yearData: 0,
+  MonthData: 0,
+  DateData: 0,
   todayDate: {},
   literalTodayDate: [],
   fetchedDate: {},
