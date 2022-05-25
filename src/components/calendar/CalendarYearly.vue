@@ -36,6 +36,7 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import CalendarSmall from './CalendarSmall.vue'
 import CalendarBlock from './CalendarBlock.vue'
+import { utils } from '@/utils/index'
 export default {
   components: {
     CalendarSmall,
@@ -59,6 +60,7 @@ export default {
   methods: {
     ...mapMutations([
       'CHANGE_FETCHED_DATE',
+      'CHANGE_LOADED_DATES',
       'SET_MODAL_DATA'
     ]),
     fetchClickedDay (event) {
@@ -67,11 +69,12 @@ export default {
       this.$store.state.fetchedDate = dateConstructor
       if (Number(dateString[0]) !== this.loadedYear) {
         this.CHANGE_FETCHED_DATE(dateConstructor)
+        this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
         this.loadedYear = Number(dateString[0])
       }
     },
     showModalTodo (event) {
-      this.seSET_MODAL_DATAtModalData(event)
+      this.SET_MODAL_DATA(event)
     },
     isYearlyFetchedDate (day, key) {
       return (day[0] === this.fetchedDateString[0] && day[1] === this.fetchedDateString[1] && day[2] === this.fetchedDateString[2]) && (this.selectedCalendarType === 'Yearly') && ((key + 1) === this.fetchedDateString[1])

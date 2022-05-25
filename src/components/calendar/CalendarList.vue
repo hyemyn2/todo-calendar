@@ -94,6 +94,7 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import CalendarBlock from './CalendarBlock.vue'
 import { TypeMixin } from '../../mixins/TypeMixin'
+import { utils } from '@/utils/index'
 export default {
   mixins: [
     TypeMixin
@@ -126,12 +127,15 @@ export default {
   methods: {
     ...mapMutations([
       'CHANGE_FETCHED_DATE',
+      'CHANGE_LOADED_DATES',
+      'CHANGE_LOADED_DATES',
       'SET_MODAL_DATA'
     ]),
     fetchClickedDay (event) {
       const dateString = event.target.id.split(',')
       const dateConstructor = new Date(dateString[0], dateString[1] - 1, dateString[2])
       this.CHANGE_FETCHED_DATE(dateConstructor)
+      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
     },
     showModalTodo (event) {
       this.SET_MODAL_DATA(event)

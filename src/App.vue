@@ -22,6 +22,8 @@ import HeaderSection from './components/view/HeaderSection.vue'
 import SideSection from './components/view/SideSection.vue'
 import MainSection from './components/view/MainSection.vue'
 import { mapState, mapMutations } from 'vuex'
+import { utils } from '@/utils/index'
+
 export default {
   name: 'App',
   components: {
@@ -34,18 +36,22 @@ export default {
       'allToggles',
       'literalTodayDate',
       'booleanBurger',
-      'todayDate'
+      'todayDate',
+      'fetchedDate',
+      'selectedCalendarType'
     ])
   },
   methods: {
     ...mapMutations([
-      'CHANGE_FETCHED_DATE'
+      'CHANGE_FETCHED_DATE',
+      'CHANGE_LOADED_DATES'
     ]),
     fetchToday () {
       const fetchedToday = new Date()
       this.$store.state.todayDate = fetchedToday
       this.$store.state.literalTodayDate = [fetchedToday.getFullYear(), fetchedToday.getMonth() + 1, fetchedToday.getDate()]
       this.CHANGE_FETCHED_DATE(this.$store.state.todayDate)
+      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
     },
     togglesOff (event) {
       if (event.target.className !== this.allToggles.toggleCalendarType.excludeOffEvent) {

@@ -15,6 +15,7 @@ export const TodoModal = {
   methods: {
     offModalTodo () {
       this.SET_STATE_OFF_MODAL_TODO()
+      this.newTodoItem = ''
     },
     addTodo () {
       if (this.newTodoItem !== '') {

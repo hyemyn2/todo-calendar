@@ -28,8 +28,6 @@ export default {
     2: 'Monthly',
     3: 'Yearly'
   },
-  savedCalendarDates: [],
-  savedYearlyCalendarDates: [],
   selectedCalendarType: 'Monthly',
   allToggles: {
     toggleCalendarType: {

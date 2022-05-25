@@ -13,13 +13,13 @@
           <div class="arrows">
               <span
                 class="arrowPrev"
-                @click="showPrev"
+                @click="showPage('prev')"
               >
                 <i class="fa-solid fa-angle-left"></i>
               </span>
               <span
                 class="arrowNext"
-                @click="showNext"
+                @click="showPage('next')"
               >
                 <i class="fa-solid fa-angle-right"></i>
               </span>
@@ -95,10 +95,16 @@
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import CalendarBlock from '../calendar/CalendarBlock.vue'
 import CalendarSmall from '../calendar/CalendarSmall.vue'
+import { utils } from '@/utils/index'
 export default {
   components: {
     CalendarSmall,
     CalendarBlock
+  },
+  data () {
+    return {
+      sideCalendarType: 'Monthly'
+    }
   },
   computed: {
     ...mapState([
@@ -109,7 +115,8 @@ export default {
       'todayDate',
       'literalMonths',
       'literalTodayDate',
-      'todoData'
+      'todoData',
+      'selectedCalendarType'
     ]),
     ...mapGetters([
       'setSideYear',
@@ -127,18 +134,21 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'CHANGE_SIDE_CALENDAR',
       'CHANGE_FETCHED_DATE',
-      'SET_SIDE_FETCHED_DATE_TO_TODAY'
+      'CHANGE_LOADED_DATES',
+      'CHANGE_SIDE_FETCHED_DATE',
+      'CHANGE_SIDE_LOADED_DATES'
     ]),
-    showPrev () {
-      this.CHANGE_SIDE_CALENDAR({ type: 'showPrev' })
+    showPage (btnType) {
+      this.CHANGE_SIDE_FETCHED_DATE(this.figureNewDateByButtons(btnType))
+      this.CHANGE_SIDE_LOADED_DATES(utils().figureDates[this.sideCalendarType](this.sideFetchedDate))
     },
-    showNext () {
-      this.CHANGE_SIDE_CALENDAR({ type: 'showNext' })
+    figureNewDateByButtons (btnType) {
+      return new Date(this.sideFetchedDate.getFullYear(), this.sideFetchedDate.getMonth() + (btnType === 'prev' ? -1 : +1), this.sideFetchedDate.getDate())
     },
     fetchMonthlyCalendar (day) {
       this.CHANGE_FETCHED_DATE(new Date(day[0], day[1] - 1, day[2]))
+      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
     },
     sideCheckTodo (todoItem, key) {
       this.todoData[`${this.literalTodayDate.join(',')}`][key].completed = !this.todoData[`${this.literalTodayDate.join(',')}`][key].completed
@@ -148,8 +158,8 @@ export default {
     }
   },
   created () {
-    this.SET_SIDE_FETCHED_DATE_TO_TODAY()
-    this.CHANGE_SIDE_CALENDAR({ type: 'showToday' })
+    this.CHANGE_SIDE_FETCHED_DATE(new Date())
+    this.CHANGE_SIDE_LOADED_DATES(utils().figureDates[this.sideCalendarType](this.fetchedDate))
   }
 }
 </script>

@@ -21,13 +21,13 @@
         <div class="arrows">
             <span
               class="arrowPrev"
-              @click="showPrevPage"
+              @click="showPage('prev')"
             >
               <i class="fa-solid fa-angle-left"></i>
             </span>
             <span
               class="arrowNext"
-              @click="showNextPage"
+              @click="showPage('next')"
             >
               <i class="fa-solid fa-angle-right"></i>
             </span>
@@ -71,12 +71,11 @@
 
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
-import { TypeMixin } from '../../mixins/TypeMixin'
-import { btnUtils } from '../../utils/index'
+import { TypeMixin } from '@/mixins/TypeMixin'
+import { utils } from '@/utils/index'
 export default {
   mixins: [
-    TypeMixin,
-    btnUtils
+    TypeMixin
   ],
   computed: {
     ...mapState([
@@ -106,15 +105,36 @@ export default {
   methods: {
     ...mapMutations([
       'CHANGE_FETCHED_DATE',
-      'SELECT_CALENDAR_TYPE',
+      'CHANGE_LOADED_DATES',
+      'FETCH_CALENDAR_TYPE',
       'SHOW_CALENDAR_TYPES'
     ]),
     selectType (event) {
-      this.SELECT_CALENDAR_TYPE(event.target.dataset.num)
+      this.FETCH_CALENDAR_TYPE(event.target.dataset.num)
       this.CHANGE_FETCHED_DATE(this.fetchedDate)
+      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
     },
     showTypes () {
       this.SHOW_CALENDAR_TYPES()
+    },
+    showToday () {
+      this.CHANGE_FETCHED_DATE(new Date(this.todayDateYear, this.todayDateMonth, this.todayDateDate))
+      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
+    },
+    figureNewDateByButtons (btnType) {
+      if (this.selectedCalendarType === 'Monthly') {
+        return new Date(this.fetchedDateYear, this.fetchedDateMonth + (btnType === 'prev' ? -1 : +1), this.fetchedDateDate)
+      } else if (this.selectedCalendarType === 'Weekly') {
+        return new Date(this.fetchedDateYear, this.fetchedDateMonth, this.fetchedDateDate + (btnType === 'prev' ? -7 : +7))
+      } else if (this.selectedCalendarType === 'Daily') {
+        return new Date(this.fetchedDateYear, this.fetchedDateMonth, this.fetchedDateDate + (btnType === 'prev' ? -1 : +1))
+      } else if (this.selectedCalendarType === 'Yearly') {
+        return new Date(this.fetchedDateYear + (btnType === 'prev' ? -1 : +1), this.fetchedDateMonth, this.fetchedDateDate)
+      }
+    },
+    showPage (btnType) {
+      this.CHANGE_FETCHED_DATE(this.figureNewDateByButtons(btnType))
+      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
     }
   }
 }
