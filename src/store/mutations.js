@@ -38,11 +38,13 @@ export default {
     }
     state.todoData = getLocalStorage
     const copyModalTodo = [...state.modalTodo]
-    state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / 8))].map(i => copyModalTodo.splice(i * 8, 8))
+    const todoUnit = 8
+    state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / todoUnit))].map(i => copyModalTodo.splice(i * todoUnit, todoUnit))
     state.fetchedModalPage = state.modalTodoDivided.length - 1
   },
   [CHECK_TODO_ITEM] (state, payload) {
-    const key = payload.pageKey * 8 + Number(payload.key)
+    const todoUnit = 8
+    const key = payload.pageKey * todoUnit + Number(payload.key)
     state.modalTodo[key].completed = !payload.todoItem.completed
     state.todoData[state.modalDate] = state.modalTodo
     localStorage.setItem('todos', JSON.stringify(state.todoData))
@@ -53,11 +55,12 @@ export default {
     state.todoData = getLocalStorage
 
     const copyModalTodo = [...state.modalTodo]
-    state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / 8))].map(i => copyModalTodo.splice(i * 8, 8))
+    state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / todoUnit))].map(i => copyModalTodo.splice(i * todoUnit, todoUnit))
   },
   [DELETE_TODO_ITEM] (state, payload) {
+    const todoUnit = 8
     const pageLength = state.modalTodoDivided.length
-    const key = payload.pageKey * 8 + Number(payload.key)
+    const key = payload.pageKey * todoUnit + Number(payload.key)
     state.modalTodo.splice(key, 1)
     state.todoData[state.modalDate] = state.modalTodo
     if (state.todoData[state.modalDate].length === 0) {
@@ -70,12 +73,13 @@ export default {
     }
     state.todoData = getLocalStorage
     const copyModalTodo = [...state.modalTodo]
-    state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / 8))].map(i => copyModalTodo.splice(i * 8, 8))
+    state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / todoUnit))].map(i => copyModalTodo.splice(i * todoUnit, todoUnit))
     if ((state.fetchedModalPage !== state.modalTodoDivided.length - 1) && (state.modalTodoDivided[pageLength - 1] === undefined)) {
       state.fetchedModalPage--
     }
   },
   [SET_MODAL_DATA] (state, payload) {
+    const todoUnit = 8
     state.showModal = true
     const clickedDate = payload.target.id
     state.modalDate = clickedDate
@@ -85,7 +89,7 @@ export default {
       state.modalTodo = []
     }
     const copyModalTodo = [...state.modalTodo]
-    state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / 8))].map(i => copyModalTodo.splice(i * 8, 8))
+    state.modalTodoDivided = [...Array(Math.ceil(state.modalTodo.length / 8))].map(i => copyModalTodo.splice(i * todoUnit, todoUnit))
   },
   [FETCH_CALENDAR_TYPE] (state, payload) {
     if (payload) {

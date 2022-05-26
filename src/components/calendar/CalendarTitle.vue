@@ -35,7 +35,7 @@
         <button
           @click="showToday"
         >
-          Today
+          today
         </button>
       </div>
       <div class="selectBox">
@@ -53,16 +53,16 @@
           @click="selectType"
         >
           <li data-num="0">
-            Daily
+            daily
           </li>
           <li data-num="1">
-            Weekly
+            weekly
           </li>
           <li data-num="2">
-            Monthly
+            monthly
           </li>
           <li data-num="3">
-            Yearly
+            yearly
           </li>
         </ul>
       </div>
@@ -82,21 +82,14 @@ export default {
       'selectedCalendarType',
       'literalMonths',
       'allToggles',
-      'fetchedDate',
-      'todayDate',
-      'yearData',
-      'MonthData',
-      'DateData'
+      'fetchedDate'
     ]),
     ...mapGetters([
       'setMainYear',
       'setMainMonth',
       'fetchedDateYear',
       'fetchedDateMonth',
-      'fetchedDateDate',
-      'todayDateYear',
-      'todayDateMonth',
-      'todayDateDate'
+      'fetchedDateDate'
     ]),
     setLiteralMonths () {
       return this.literalMonths[this.setMainMonth - 1]
@@ -110,31 +103,36 @@ export default {
       'SHOW_CALENDAR_TYPES'
     ]),
     selectType (event) {
-      this.FETCH_CALENDAR_TYPE(event.target.dataset.num)
-      this.CHANGE_FETCHED_DATE(this.fetchedDate)
-      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
+      const clickedCalendarType = event.target.dataset.num
+      this.FETCH_CALENDAR_TYPE(clickedCalendarType)
+      const newLoadedDates = utils().figureDatesByCalendarType[this.selectedCalendarType](this.fetchedDate)
+      this.CHANGE_LOADED_DATES(newLoadedDates)
     },
     showTypes () {
       this.SHOW_CALENDAR_TYPES()
     },
     showToday () {
-      this.CHANGE_FETCHED_DATE(new Date(this.todayDateYear, this.todayDateMonth, this.todayDateDate))
-      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
+      const newFetchedDate = new Date()
+      this.CHANGE_FETCHED_DATE(newFetchedDate)
+      const newLoadedDates = utils().figureDatesByCalendarType[this.selectedCalendarType](newFetchedDate)
+      this.CHANGE_LOADED_DATES(newLoadedDates)
     },
-    figureNewDateByButtons (btnType) {
-      if (this.selectedCalendarType === 'Monthly') {
+    figureNewDateByPrevNext (btnType) {
+      if (this.selectedCalendarType === 'monthly') {
         return new Date(this.fetchedDateYear, this.fetchedDateMonth + (btnType === 'prev' ? -1 : +1), this.fetchedDateDate)
-      } else if (this.selectedCalendarType === 'Weekly') {
+      } else if (this.selectedCalendarType === 'weekly') {
         return new Date(this.fetchedDateYear, this.fetchedDateMonth, this.fetchedDateDate + (btnType === 'prev' ? -7 : +7))
-      } else if (this.selectedCalendarType === 'Daily') {
+      } else if (this.selectedCalendarType === 'daily') {
         return new Date(this.fetchedDateYear, this.fetchedDateMonth, this.fetchedDateDate + (btnType === 'prev' ? -1 : +1))
-      } else if (this.selectedCalendarType === 'Yearly') {
+      } else if (this.selectedCalendarType === 'yearly') {
         return new Date(this.fetchedDateYear + (btnType === 'prev' ? -1 : +1), this.fetchedDateMonth, this.fetchedDateDate)
       }
     },
     showPage (btnType) {
-      this.CHANGE_FETCHED_DATE(this.figureNewDateByButtons(btnType))
-      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
+      const newFetchedDate = this.figureNewDateByPrevNext(btnType)
+      this.CHANGE_FETCHED_DATE(newFetchedDate)
+      const newLoadedDates = utils().figureDatesByCalendarType[this.selectedCalendarType](newFetchedDate)
+      this.CHANGE_LOADED_DATES(newLoadedDates)
     }
   }
 }
@@ -203,6 +201,7 @@ export default {
     cursor: pointer;
     transition: .2s;
     margin: 0 15px;
+    text-transform: capitalize;
   }
   .calendarHeader .tools button:hover {
       background: rgba(139, 192, 235, 0.15);
@@ -228,6 +227,7 @@ export default {
     margin: 0;
     margin-left: 11px;
     pointer-events: none;
+    text-transform: capitalize;
   }
   .calendarHeader .selectBox .triangle {
     display: inline-block;
@@ -258,6 +258,7 @@ export default {
 
   .calendarHeader .selectBox ul li {
     padding: 8px 15px;
+    text-transform: capitalize;
   }
   .calendarHeader .selectBox ul li:hover {
     background: rgba(139, 192, 235, 0.7);

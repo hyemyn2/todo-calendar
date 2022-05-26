@@ -1,67 +1,75 @@
 export function utils () {
-  const figureDatesYearly = (variableDate) => {
-    const calendarDates = []
-    for (let i = 0; i < 12; i++) {
-      const newPayload = new Date(variableDate.getFullYear(), i, variableDate.getDate())
-      const eachMonthDates = figureDatesMonthly(newPayload)
-      calendarDates.push(eachMonthDates)
+  const figureDatesYearly = (newFetchedDate) => {
+    const newLoadedDates = []
+    const totalMonths = 12
+    for (let i = 0; i < totalMonths; i++) {
+      const eachMonthFetchedDate = new Date(newFetchedDate.getFullYear(), i, newFetchedDate.getDate())
+      const eachMonthLoadedDates = figureDatesMonthly(eachMonthFetchedDate)
+      newLoadedDates.push(eachMonthLoadedDates)
     }
-    return calendarDates
+    return newLoadedDates
   }
-  const figureDatesMonthly = (variableDate) => {
-    let calendarDates = []
+  const figureDatesMonthly = (newFetchedDate) => {
+    let newLoadedDates = []
     let shownPrevDates = []
     let shownNextDates = []
     let shownThisDates = []
-    const thisMonthLast = new Date(variableDate.getFullYear(), variableDate.getMonth() + 1, 0)
+
+    const thisMonthLast = new Date(newFetchedDate.getFullYear(), newFetchedDate.getMonth() + 1, 0)
     const thisMonthLastDate = thisMonthLast.getDate()
     const thisMonthLastDay = thisMonthLast.getDay()
 
-    const prevMonthLast = new Date(variableDate.getFullYear(), variableDate.getMonth(), 0)
+    const prevMonthLast = new Date(newFetchedDate.getFullYear(), newFetchedDate.getMonth(), 0)
     const prevMonthLastDate = prevMonthLast.getDate()
     const prevMonthLastDay = prevMonthLast.getDay()
 
-    const nextMonthLast = new Date(variableDate.getFullYear(), variableDate.getMonth() + 2, 0)
+    const nextMonthLast = new Date(newFetchedDate.getFullYear(), newFetchedDate.getMonth() + 2, 0)
 
     shownPrevDates = []
-    if (prevMonthLastDay !== 6) {
+    const totalDaysAWeek = 7
+    if (prevMonthLastDay !== totalDaysAWeek - 1) {
       let prevDay = prevMonthLastDate - prevMonthLastDay
       for (let i = 0; i < prevMonthLastDay + 1; i++) {
         shownPrevDates.push([prevMonthLast.getFullYear(), prevMonthLast.getMonth() + 1, prevDay])
         prevDay = ++prevDay
       }
     }
-    shownNextDates = []
-    if (thisMonthLastDay !== 6) {
-      shownNextDates = [...Array(6 - thisMonthLastDay).keys()].map(key => [nextMonthLast.getFullYear(), nextMonthLast.getMonth() + 1, key + 1])
+
+    if (thisMonthLastDay !== totalDaysAWeek - 1) {
+      shownNextDates = [...Array(6 - thisMonthLastDay).keys()]
+        .map(key => [nextMonthLast.getFullYear(), nextMonthLast.getMonth() + 1, key + 1])
     }
-    shownThisDates = [...Array(thisMonthLastDate).keys()].map(key => [thisMonthLast.getFullYear(), thisMonthLast.getMonth() + 1, key + 1])
-    calendarDates = shownPrevDates.concat(shownThisDates, shownNextDates)
-    return calendarDates
+
+    shownThisDates = [...Array(thisMonthLastDate).keys()]
+      .map(key => [thisMonthLast.getFullYear(), thisMonthLast.getMonth() + 1, key + 1])
+
+    newLoadedDates = shownPrevDates.concat(shownThisDates, shownNextDates)
+    return newLoadedDates
   }
-  const figureDatesWeekly = (variableDate) => {
-    const calendarDates = []
-    for (let i = 0; i < 7; i++) {
-      const theDay = new Date(variableDate.getFullYear(), variableDate.getMonth(), variableDate.getDate() - variableDate.getDay() + i)
-      calendarDates.push([theDay.getFullYear(), theDay.getMonth() + 1, theDay.getDate()])
+  const figureDatesWeekly = (newFetchedDate) => {
+    const newLoadedDates = []
+    const totalDaysAWeek = 7
+    for (let i = 0; i < totalDaysAWeek; i++) {
+      const theDay = new Date(newFetchedDate.getFullYear(), newFetchedDate.getMonth(), newFetchedDate.getDate() - newFetchedDate.getDay() + i)
+      newLoadedDates.push([theDay.getFullYear(), theDay.getMonth() + 1, theDay.getDate()])
     }
-    return calendarDates
+    return newLoadedDates
   }
-  const figureDatesDaily = (variableDate) => {
-    const calendarDates = [[variableDate.getFullYear(), variableDate.getMonth() + 1, variableDate.getDate()]]
-    return calendarDates
+  const figureDatesDaily = (newFetchedDate) => {
+    const newLoadedDates = [[newFetchedDate.getFullYear(), newFetchedDate.getMonth() + 1, newFetchedDate.getDate()]]
+    return newLoadedDates
   }
-  const figureDates = {
-    Monthly: figureDatesMonthly,
-    Yearly: figureDatesYearly,
-    Weekly: figureDatesWeekly,
-    Daily: figureDatesDaily
+  const figureDatesByCalendarType = {
+    monthly: figureDatesMonthly,
+    yearly: figureDatesYearly,
+    weekly: figureDatesWeekly,
+    daily: figureDatesDaily
   }
   return {
     figureDatesYearly,
     figureDatesMonthly,
     figureDatesWeekly,
     figureDatesDaily,
-    figureDates
+    figureDatesByCalendarType
   }
 }

@@ -115,13 +115,13 @@ export default {
       'fetchedDateString'
     ]),
     isActiveDaily () {
-      return this.selectedCalendarType === 'Daily' ? 'activeDaily' : ''
+      return this.selectedCalendarType === 'daily' ? 'activeDaily' : ''
     },
     isActiveWeekly () {
-      return this.selectedCalendarType === 'Weekly' ? 'activeWeekly' : ''
+      return this.selectedCalendarType === 'weekly' ? 'activeWeekly' : ''
     },
     isActiveMonthly () {
-      return this.selectedCalendarType === 'Monthly' ? 'activeMonthly' : ''
+      return this.selectedCalendarType === 'monthly' ? 'activeMonthly' : ''
     }
   },
   methods: {
@@ -133,23 +133,23 @@ export default {
     ]),
     fetchClickedDay (event) {
       const dateString = event.target.id.split(',')
-      const dateConstructor = new Date(dateString[0], dateString[1] - 1, dateString[2])
-      this.CHANGE_FETCHED_DATE(dateConstructor)
-      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
+      const newFetchedDate = new Date(dateString[0], dateString[1] - 1, dateString[2])
+      this.CHANGE_FETCHED_DATE(newFetchedDate)
+      const newLoadedDates = utils().figureDatesByCalendarType[this.selectedCalendarType](newFetchedDate)
+      this.CHANGE_LOADED_DATES(newLoadedDates)
     },
     showModalTodo (event) {
       this.SET_MODAL_DATA(event)
     },
     renderTodo (day) {
-      const renderDate = day.join(',')
-      const renderDateArr = this.todoData[`${renderDate}`]
-      if (renderDateArr !== undefined) {
+      const renderDateArr = this.todoData[day.join(',')]
+      if (renderDateArr) {
         return renderDateArr
       }
     },
     figureTodoLength (day) {
       const arr = this.renderTodo(day)
-      if (arr !== undefined) {
+      if (arr) {
         return arr.length
       }
     },
@@ -157,10 +157,10 @@ export default {
       return this.figureTodoLength(day) - 3
     },
     isWeeklyMonthlyFetchedDate (day) {
-      return (day[0] === this.fetchedDateString[0] && day[1] === this.fetchedDateString[1] && day[2] === this.fetchedDateString[2]) && (this.selectedCalendarType === 'Weekly' || this.selectedCalendarType === 'Monthly')
+      return (day[0] === this.fetchedDateString[0] && day[1] === this.fetchedDateString[1] && day[2] === this.fetchedDateString[2]) && (this.selectedCalendarType === 'weekly' || this.selectedCalendarType === 'monthly')
     },
     isWeeklyMonthlyFirstDate (day) {
-      return day[2] === 1 && (this.selectedCalendarType === 'Weekly' || this.selectedCalendarType === 'Monthly')
+      return day[2] === 1 && (this.selectedCalendarType === 'weekly' || this.selectedCalendarType === 'monthly')
     },
     setLiteralMonths (day) {
       return this.literalMonths[Number(day[1] - 1)].slice(0, 3)

@@ -23,12 +23,12 @@ export default {
   })(),
   booleanBurger: false,
   calendarType: {
-    0: 'Daily',
-    1: 'Weekly',
-    2: 'Monthly',
-    3: 'Yearly'
+    0: 'daily',
+    1: 'weekly',
+    2: 'monthly',
+    3: 'yearly'
   },
-  selectedCalendarType: 'Monthly',
+  selectedCalendarType: 'monthly',
   allToggles: {
     toggleCalendarType: {
       excludeOffEvent: 'selectedValue',

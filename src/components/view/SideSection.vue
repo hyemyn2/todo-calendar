@@ -69,7 +69,7 @@
           <div class="toolBoxContent">
             <ul class="todayList">
               <li
-                @click="sideCheckTodo(todoItem, key)"
+                @click="sideCheckTodo(key)"
                 :class="{checked:todoItem.completed}"
                 class="todoItem"
                 v-for="(todoItem, key) in todoDataArr"
@@ -103,7 +103,7 @@ export default {
   },
   data () {
     return {
-      sideCalendarType: 'Monthly'
+      sideCalendarType: 'monthly'
     }
   },
   computed: {
@@ -140,17 +140,22 @@ export default {
       'CHANGE_SIDE_LOADED_DATES'
     ]),
     showPage (btnType) {
-      this.CHANGE_SIDE_FETCHED_DATE(this.figureNewDateByButtons(btnType))
-      this.CHANGE_SIDE_LOADED_DATES(utils().figureDates[this.sideCalendarType](this.sideFetchedDate))
+      const newFetchedDate = this.figureNewDateByButtons(btnType)
+      this.CHANGE_SIDE_FETCHED_DATE(newFetchedDate)
+      const newLoadedDates = utils().figureDatesByCalendarType[this.sideCalendarType](newFetchedDate)
+      this.CHANGE_SIDE_LOADED_DATES(newLoadedDates)
     },
     figureNewDateByButtons (btnType) {
       return new Date(this.sideFetchedDate.getFullYear(), this.sideFetchedDate.getMonth() + (btnType === 'prev' ? -1 : +1), this.sideFetchedDate.getDate())
     },
     fetchMonthlyCalendar (day) {
-      this.CHANGE_FETCHED_DATE(new Date(day[0], day[1] - 1, day[2]))
-      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
+      const newFetchedDate = new Date(day[0], day[1] - 1, day[2])
+      this.CHANGE_SIDE_FETCHED_DATE(newFetchedDate)
+      this.CHANGE_FETCHED_DATE(newFetchedDate)
+      const newLoadedDates = utils().figureDatesByCalendarType[this.selectedCalendarType](this.fetchedDate)
+      this.CHANGE_LOADED_DATES(newLoadedDates)
     },
-    sideCheckTodo (todoItem, key) {
+    sideCheckTodo (key) {
       this.todoData[`${this.literalTodayDate.join(',')}`][key].completed = !this.todoData[`${this.literalTodayDate.join(',')}`][key].completed
     },
     checkFetched (day) {
@@ -159,7 +164,8 @@ export default {
   },
   created () {
     this.CHANGE_SIDE_FETCHED_DATE(new Date())
-    this.CHANGE_SIDE_LOADED_DATES(utils().figureDates[this.sideCalendarType](this.fetchedDate))
+    const newLoadedDates = utils().figureDatesByCalendarType[this.sideCalendarType](this.fetchedDate)
+    this.CHANGE_SIDE_LOADED_DATES(newLoadedDates)
   }
 }
 </script>

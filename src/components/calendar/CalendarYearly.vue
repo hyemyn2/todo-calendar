@@ -2,8 +2,6 @@
   <div class="yearlyComponent">
       <div
         class="calendarBox"
-        @click="fetchClickedDay"
-        @dblclick="showModalTodo"
         v-for="(month, key) in loadedDates"
         :key="key"
       >
@@ -17,6 +15,8 @@
               :id="day"
               :key="index"
               :class="{activeFetched: isYearlyFetchedDate(day, key)}"
+              @click="fetchClickedDay"
+              @dblclick="showModalTodo"
             >
             <calendar-block id="show-modal">
                   <span
@@ -65,23 +65,24 @@ export default {
     ]),
     fetchClickedDay (event) {
       const dateString = event.target.id.split(',')
-      const dateConstructor = new Date(dateString[0], dateString[1] - 1, dateString[2])
-      this.$store.state.fetchedDate = dateConstructor
-      if (Number(dateString[0]) !== this.loadedYear) {
-        this.CHANGE_FETCHED_DATE(dateConstructor)
-        this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
-        this.loadedYear = Number(dateString[0])
+      const newFetchedDate = new Date(dateString[0], dateString[1] - 1, dateString[2])
+      const fetchedDateYear = Number(dateString[0])
+      this.CHANGE_FETCHED_DATE(newFetchedDate)
+      if (fetchedDateYear !== this.loadedYear) {
+        const newLoadedDates = utils().figureDatesByCalendarType[this.selectedCalendarType](newFetchedDate)
+        this.CHANGE_LOADED_DATES(newLoadedDates)
+        this.loadedYear = fetchedDateYear
       }
     },
     showModalTodo (event) {
       this.SET_MODAL_DATA(event)
     },
     isYearlyFetchedDate (day, key) {
-      return (day[0] === this.fetchedDateString[0] && day[1] === this.fetchedDateString[1] && day[2] === this.fetchedDateString[2]) && (this.selectedCalendarType === 'Yearly') && ((key + 1) === this.fetchedDateString[1])
+      return (day[0] === this.fetchedDateString[0] && day[1] === this.fetchedDateString[1] && day[2] === this.fetchedDateString[2]) && (this.selectedCalendarType === 'yearly') && ((key + 1) === this.fetchedDateString[1])
     }
   },
   created () {
-    this.loadedYear = this.$store.state.fetchedDate.getFullYear()
+    this.loadedYear = this.fetchedDate.getFullYear()
   }
 }
 </script>
@@ -95,6 +96,9 @@ export default {
     .yearlyComponent .calendarBox {
         width: 70%;
         margin: 40px auto;
+        padding: 20px;
+        /* box-shadow: inset 0px 0px 10px 10px rgba(0, 0, 0, 0.05); */
+        border: 1px solid rgba(0, 0, 0, 0.1);
     }
     .yearlyComponent .calendarBox .monthTitle {
         display: flex;
@@ -103,7 +107,7 @@ export default {
         padding-top: 2px;
         padding-bottom: 2px;
         margin-bottom: 12px;
-        background: rgba(0, 0, 0, 0.03);
+        /* background: rgba(0, 0, 0, 0.03); */
     }
     .yearlyComponent .calendarBox .monthTitle .monthNumber {
         margin: 0 10px 0 0;

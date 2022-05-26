@@ -51,7 +51,7 @@ export default {
       this.$store.state.todayDate = fetchedToday
       this.$store.state.literalTodayDate = [fetchedToday.getFullYear(), fetchedToday.getMonth() + 1, fetchedToday.getDate()]
       this.CHANGE_FETCHED_DATE(this.$store.state.todayDate)
-      this.CHANGE_LOADED_DATES(utils().figureDates[this.selectedCalendarType](this.fetchedDate))
+      this.CHANGE_LOADED_DATES(utils().figureDatesByCalendarType[this.selectedCalendarType](this.fetchedDate))
     },
     togglesOff (event) {
       if (event.target.className !== this.allToggles.toggleCalendarType.excludeOffEvent) {
